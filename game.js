@@ -12,16 +12,31 @@ function getComputerChoice(){
     let computerChoice;
     
     if (randomNumber === 1){
-        return computerChoice = "rock"
+        return computerChoice = "Rock"
     } else if (randomNumber === 2){
-        return computerChoice = "paper"
+        return computerChoice = "Paper"
     }else if (randomNumber === 3) {
-        return computerChoice = "scissors"  
+        return computerChoice = "Scissors"  
     } 
 }
 
-function getHumanChoice(){  
-    let humanChoice = prompt("What's your choice? \"rock\", \"paper\" or \"scissors\"");
+let humanButton = document.querySelectorAll(".humanOption");
+humanButton.forEach((i)=>{
+    i.addEventListener("click",()=>{
+        const humanChoice = i.textContent;
+        document.querySelector("#humanChoice").innerHTML = humanChoice;
+        //humanChoice.textContent = humanChoice.textContent.toLowerCase();
+        const computerChoice = getComputerChoice();
+        document.querySelector("#computerChoice").innerHTML = computerChoice;
+        
+        console.log("Funciona");
+        playRound(humanChoice.toLowerCase(),computerChoice.toLowerCase());
+       // document.querySelector("#humanChoice").innerHTML = i.innerHTML;
+    });  
+ });
+
+/*function getHumanChoice(){  
+    //let humanChoice = prompt("What's your choice? \"rock\", \"paper\" or \"scissors\"");
     humanChoice = humanChoice.toLowerCase();
     if (humanChoice === "paper" || humanChoice === "rock" || humanChoice === "scissors"){
         return humanChoice
@@ -30,34 +45,41 @@ function getHumanChoice(){
         //humanChoice = null;
         return getHumanChoice()
     }
-}
+}*/
 
 function playRound(humanChoice,computerChoice) {
 
     if (humanChoice === computerChoice) {
-            return alert("It's a Tie");
+        document.querySelector("#roundWinner").innerHTML = "It's a Tie";    
+        return alert("It's a Tie");
     }else if ((humanChoice === "rock" || computerChoice === "rock") && (humanChoice === "paper" || computerChoice === "paper")) {
         if (humanChoice === "rock") {
             computerScore++;
+            document.querySelector("#roundWinner").innerHTML = "You lose! Paper beats Rock.";
             return alert("You lose! Paper beats Rock.");
         }else if (humanChoice === "paper") {
             humanScore++;
+            document.querySelector("#roundWinner").innerHTML = "You win! Paper beats Rock.";
             return alert("You win! Paper beats Rock.");
         }
     } else if ((humanChoice === "rock" || computerChoice === "rock") && (humanChoice === "scissors" || computerChoice === "scissors")) {
         if (humanChoice === "scissors") {
             computerScore++;
+            document.querySelector("#roundWinner").innerHTML = "You lose! Rock beats Scissors.";
             return alert("You lose! Rock beats Scissors.");
         }else if (humanChoice === "rock") {
             humanScore++;
+            document.querySelector("#roundWinner").innerHTML = "You win! Rock beats Scissors.";
             return alert("You win! Rock beats Scissors.");
         }
     } else if ((humanChoice === "paper" || computerChoice === "paper") && (humanChoice === "scissors" || computerChoice === "scissors")) {
         if (humanChoice === "paper") {
             computerScore++;
+            document.querySelector("#roundWinner").innerHTML = "You lose! Scissors beats Paper.";
             return alert("You lose! Scissors beats Paper.");
         }else if (humanChoice === "scissors") {
             humanScore++;
+            document.querySelector("#roundWinner").innerHTML = "You win! Scissors beats Paper.";
             return alert("You win! Scissors beats Paper.");
         }
     }
@@ -105,6 +127,6 @@ function playGame(){
     
 }
 
-playGame();
+//playGame();
 
 
