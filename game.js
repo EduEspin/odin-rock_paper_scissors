@@ -1,5 +1,6 @@
 let humanScore = 0;
 let computerScore = 0;
+let humanChoice = "";
 
 function getRandomNumber1to3(){
     const minNumber = Math.ceil(1);
@@ -20,20 +21,24 @@ function getComputerChoice(){
     } 
 }
 
-let humanButton = document.querySelectorAll(".humanOption");
-humanButton.forEach((i)=>{
-    i.addEventListener("click",()=>{
-        const humanChoice = i.textContent;
-        document.querySelector("#humanChoice").innerHTML = humanChoice;
-        //humanChoice.textContent = humanChoice.textContent.toLowerCase();
-        const computerChoice = getComputerChoice();
-        document.querySelector("#computerChoice").innerHTML = computerChoice;
-        
-        console.log("Funciona");
-        playRound(humanChoice.toLowerCase(),computerChoice.toLowerCase());
-       // document.querySelector("#humanChoice").innerHTML = i.innerHTML;
-    });  
- });
+function humanButton(resolve) {
+    const humanButton = document.querySelectorAll(".humanOption");
+    humanButton.forEach((i)=>{
+        i.addEventListener("click",()=>{
+            humanChoice = i.textContent;
+            document.querySelector("#humanChoice").innerHTML = humanChoice;
+            //humanChoice.textContent = humanChoice.textContent.toLowerCase();
+            resolve();
+        });
+    });
+}
+
+async function playButton(){
+    return new Promise((resolve)=>{
+        humanButton(resolve);
+    });
+}
+
 
 /*function getHumanChoice(){  
     //let humanChoice = prompt("What's your choice? \"rock\", \"paper\" or \"scissors\"");
@@ -50,53 +55,58 @@ humanButton.forEach((i)=>{
 function playRound(humanChoice,computerChoice) {
 
     if (humanChoice === computerChoice) {
-        document.querySelector("#roundWinner").innerHTML = "It's a Tie";    
-        return alert("It's a Tie");
+        return document.querySelector("#roundWinner").innerHTML = "It's a Tie";    
     }else if ((humanChoice === "rock" || computerChoice === "rock") && (humanChoice === "paper" || computerChoice === "paper")) {
         if (humanChoice === "rock") {
             computerScore++;
-            document.querySelector("#roundWinner").innerHTML = "You lose! Paper beats Rock.";
-            return alert("You lose! Paper beats Rock.");
+            return document.querySelector("#roundWinner").innerHTML = "You lose! Paper beats Rock.";
         }else if (humanChoice === "paper") {
             humanScore++;
-            document.querySelector("#roundWinner").innerHTML = "You win! Paper beats Rock.";
-            return alert("You win! Paper beats Rock.");
+            return document.querySelector("#roundWinner").innerHTML = "You win! Paper beats Rock.";
         }
     } else if ((humanChoice === "rock" || computerChoice === "rock") && (humanChoice === "scissors" || computerChoice === "scissors")) {
         if (humanChoice === "scissors") {
             computerScore++;
-            document.querySelector("#roundWinner").innerHTML = "You lose! Rock beats Scissors.";
-            return alert("You lose! Rock beats Scissors.");
+            return document.querySelector("#roundWinner").innerHTML = "You lose! Rock beats Scissors.";
         }else if (humanChoice === "rock") {
             humanScore++;
-            document.querySelector("#roundWinner").innerHTML = "You win! Rock beats Scissors.";
-            return alert("You win! Rock beats Scissors.");
+            return document.querySelector("#roundWinner").innerHTML = "You win! Rock beats Scissors.";
         }
     } else if ((humanChoice === "paper" || computerChoice === "paper") && (humanChoice === "scissors" || computerChoice === "scissors")) {
         if (humanChoice === "paper") {
             computerScore++;
-            document.querySelector("#roundWinner").innerHTML = "You lose! Scissors beats Paper.";
-            return alert("You lose! Scissors beats Paper.");
+            return document.querySelector("#roundWinner").innerHTML = "You lose! Scissors beats Paper.";
         }else if (humanChoice === "scissors") {
             humanScore++;
-            document.querySelector("#roundWinner").innerHTML = "You win! Scissors beats Paper.";
-            return alert("You win! Scissors beats Paper.");
+            return document.querySelector("#roundWinner").innerHTML = "You win! Scissors beats Paper.";
+            
         }
     }
+
 }
-function playGame(){
+async function playGame(){
     
     for (let i = 0; i < 5; i++) {
-        alert("This is Round #"+(i+1))
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        alert("Computer Choice is " + computerSelection);
-        playRound(humanSelection, computerSelection);
-        console.log("Human Choice is " + humanSelection);
-        console.log("Computer Choice is " + computerSelection);
-        alert("Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore);
-        console.log("Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore);
+        document.querySelector("#roundNumber").innerHTML = "This is Round #"+(i+1);
+        await playButton();
+        let computerChoice = getComputerChoice();
+        document.querySelector("#computerChoice").innerHTML = computerChoice;
+        
+        //const humanSelection = getHumanChoice();
+        //const computerSelection = getComputerChoice();
+        //alert("Computer Choice is " + computerSelection);
+        playRound(humanChoice.toLowerCase(), computerChoice.toLowerCase());
+        //console.log("Human Choice is " + humanSelection);
+       // console.log("Computer Choice is " + computerSelection);
+       //document.querySelector("#humanScore").innerHTML = ("Human Score is "+ humanScore);
+       //document.querySelector("#computerScore").innerHTML = ("Computer Score is "+ computerScore);
+       document.querySelector("#roundScore").innerHTML = "Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore;
+        //alert("Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore);
+        //console.log("Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore);
     }
+    document.querySelector("#humanChoice").innerHTML = humanChoice;
+    document.querySelector("#computerChoice").innerHTML = computerChoice;
+    document.querySelector("#roundScore").innerHTML = "Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore;
 
     if (humanScore > computerScore) {
         alert("Congratulations, you won the game!");
@@ -106,7 +116,7 @@ function playGame(){
     }else if (humanScore === computerScore) {
         alert("You tie the game with the Computer");
     }
-    x = 0;
+    let x = 0;
     while (x != 1) {
         let playAgain = prompt("Would you like to play again?, Type \"yes\" or \"no\"");
         playAgain.toLowerCase();
@@ -114,11 +124,19 @@ function playGame(){
             alert("The new game will start now");  
             computerScore = 0;
             humanScore = 0;  
+            document.querySelector("#computerChoice").innerHTML = "";
+            document.querySelector("#humanChoice").innerHTML = "";
+            document.querySelector("#roundWinner").innerHTML = "";
+            document.querySelector("#roundScore").innerHTML = "Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore;
             return playGame()
         } else if (playAgain === "no") {
             alert("Thank's for playing!")
             computerScore = 0;
-            humanScore = 0;  
+            humanScore = 0; 
+            document.querySelector("#computerChoice").innerHTML = "";
+            document.querySelector("#humanChoice").innerHTML = "";
+            document.querySelector("#roundWinner").innerHTML = "";
+            document.querySelector("#roundScore").innerHTML = "Human Score is " +" "+ humanScore +" "+ "and " + "Computer Score is " +" "+ computerScore;
             x = 1;
         }else{
             alert("Please, enter a valid choice")
@@ -127,6 +145,6 @@ function playGame(){
     
 }
 
-//playGame();
+playGame();
 
 
